@@ -1,15 +1,18 @@
 {
   "configurations": [
     {
-      "name": "windows-gcc-x86",
+      "name": "linux-gcc-x64",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "/usr/lib/gcc/x86_64-linux-gnu/9/include",
+        "/usr/local/include",
+        "/usr/include/x86_64-linux-gnu",
+        "/usr/include"
       ],
       "compilerPath": "/usr/bin/gcc",
-      // "compilerPath": "C:/MinGW/bin/gcc.exe",
       "cStandard": "${default}",
       "cppStandard": "${default}",
-      "intelliSenseMode": "windows-gcc-x86",
+      "intelliSenseMode": "linux-gcc-x64",
       "compilerArgs": [
         "-Wall",
         "-Wextra",

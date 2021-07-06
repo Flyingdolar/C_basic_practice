@@ -5,7 +5,12 @@
     "-Wpedantic"
   ],
   "C_Cpp_Runner.compilerArgs": [],
-  "C_Cpp_Runner.includePaths": [],
+  "C_Cpp_Runner.includePaths": [
+    "/usr/lib/gcc/x86_64-linux-gnu/9/include",
+    "/usr/local/include",
+    "/usr/include/x86_64-linux-gnu",
+    "/usr/include"
+  ],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
