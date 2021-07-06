@@ -11,5 +11,6 @@ int main()
     remainder = (remainder + 3) % 3;
     quotient = (money - remainder) / 3;
     printf("每個人 %d 元，剩下 %d 元\n", quotient, remainder);
+    
     return 0;
 }
