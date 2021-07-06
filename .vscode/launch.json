@@ -12,7 +12,7 @@
       "program": "c:\\Users\\user\\OneDrive - 國立臺灣師範大學\\文件\\GitHub\\C_basic_practice\\build\\Debug\\outDebug",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "gdb",
-      "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+      "miDebuggerPath": "gdb",
       "externalConsole": false
     }
   ]
