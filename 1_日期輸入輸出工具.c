@@ -7,5 +7,5 @@ int main()
     scanf("%d/%d/%d",&date ,&month ,&year);
     printf("Hello World!\n");
     printf("今天是 %d 年 %02d 月 %02d 日\n",year ,month, date);
-    return 0;
+    return 0; 
 }

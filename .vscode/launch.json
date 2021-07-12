@@ -9,10 +9,10 @@
       "stopAtEntry": false,
       "cwd": "/home/flydoco/C_basic_practice",
       "environment": [],
-      "program": "/home/flydoco/C_basic_practice/a.out",
+      "program": "/home/flydoco/C_basic_practice/build/Debug/outDebug",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerPath": "gdb",
       "externalConsole": false
     }
   ]
