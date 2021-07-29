@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "name": "linux-gcc-x64",
+      "name": "macos-gcc-x64",
       "includePath": [
         "${workspaceFolder}/**",
         "/usr/lib/gcc/x86_64-linux-gnu/9/include",
@@ -9,10 +9,10 @@
         "/usr/include/x86_64-linux-gnu",
         "/usr/include"
       ],
-      "compilerPath": "/usr/bin/gcc",
+      "compilerPath": "/usr/bin/clang",
       "cStandard": "${default}",
       "cppStandard": "${default}",
-      "intelliSenseMode": "linux-gcc-x64",
+      "intelliSenseMode": "macos-gcc-x64",
       "compilerArgs": [
         "-Wall",
         "-Wextra",

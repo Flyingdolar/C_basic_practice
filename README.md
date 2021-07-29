@@ -1,4 +1,10 @@
 # C_basic_practice
-程式語言新手學習中
 
-第一週題目
+## Homework 1
+Q1 Q2 Q3
+
+## Homework 2
+Q4 Q5 Q6 Q7
+
+## Homework 3
+Q8
