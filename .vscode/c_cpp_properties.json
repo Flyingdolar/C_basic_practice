@@ -1,23 +1,19 @@
 {
   "configurations": [
     {
-      "name": "macos-gcc-x64",
+      "name": "MacOS",
       "includePath": [
-        "${workspaceFolder}/**",
-        "/usr/lib/gcc/x86_64-linux-gnu/9/include",
-        "/usr/local/include",
-        "/usr/include/x86_64-linux-gnu",
-        "/usr/include"
+        "${workspaceFolder}/**"
+      ],
+      "defines": [],
+      "macFrameworkPath": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
       ],
       "compilerPath": "/usr/bin/clang",
-      "cStandard": "${default}",
-      "cppStandard": "${default}",
-      "intelliSenseMode": "macos-gcc-x64",
-      "compilerArgs": [
-        "-Wall",
-        "-Wextra",
-        "-Wpedantic"
-      ]
+      "cStandard": "c17",
+      "cppStandard": "c++98",
+      "intelliSenseMode": "clang-x64",
+      "compilerArgs": []
     }
   ],
   "version": 4
