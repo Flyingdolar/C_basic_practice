@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     scanf("%d %d %d",&a ,&b ,&c);
     printf("請輸入內縮寬度與深度(shortage depth)：");
     scanf("%d %d",&e ,&d);
-    
+
     e = 2 * e;
 
     // Volume

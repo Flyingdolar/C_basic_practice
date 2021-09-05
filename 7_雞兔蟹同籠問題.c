@@ -28,6 +28,6 @@ int main(int argc, char const *argv[])
     printf("雞的數量：%d\n",chicken);
     printf("兔子數量：%d\n",rabbit);
     printf("螃蟹數量：%d\n",crab);
-    
+
     return 0;
 }

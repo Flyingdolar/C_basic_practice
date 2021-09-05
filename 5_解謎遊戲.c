@@ -8,7 +8,7 @@ int main(int argc, char const *argv[])
     int h1, m1, s1;     // 0 <= h1 h2 <= 24
     int h2, m2, s2;     // 0 <= m1 m2 <= 60
                         // 0 <= s1 s2 <= 60
-    
+
     // Read
     printf("請輸入規定臨界值 n ：");
     scanf("%d", &n);

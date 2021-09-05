@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     printf("請輸入A B C 三人分別出的手勢：\n");
     printf("0 = 剪刀，1 = 石頭，2 = 布\n");
     scanf("%d %d %d",&Ason ,&Bson ,&Cson);
-    
+
     //有人贏則輸出1，沒有則輸出0
     onlywinner = ((Ason + Bson + Cson) % 3) % 2;
     //A勝利+1，B勝利+2，C勝利+3

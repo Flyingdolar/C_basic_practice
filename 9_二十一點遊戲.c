@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
         card2 = 10;
     if (host == 1)
         host += 10;
-    
+
     cardTol = card1 +card2;
 
     // Judgement
