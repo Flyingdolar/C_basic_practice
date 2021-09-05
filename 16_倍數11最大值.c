@@ -44,7 +44,7 @@ int main(){
             }
             while (ZeroAmount--){
                 printf("0");
-            }    
+            }
         }
         printf("\n");
     }
