@@ -6,19 +6,21 @@
 int countOne(number){
     int result = 0;
     int digit = 1;
-    int remain;
+    int judge, storage;
 
-    for (int i = number; i == 0; i /= 10, digit *= 10)
+    storage = number;
+    while(storage)
     {
-        result += (i / 10) *  digit;
-        remain = result % 10;
-        if(remain == 0){
-            result -= digit;
-        }else if(remain == 1){
-            result -= digit - number % digit;
+        judge = storage % 10;
+        storage /= 10;
+        result += storage * digit;
+        if (judge > 1){
+            result += digit;
+        }else if(judge == 1){
+            result += (number % digit) + 1;
         }
+        digit *= 10;
     }
-
     return result;
 }
 
@@ -30,10 +32,10 @@ int main(){
     scanf("%d",&n);
 
     while(n--){
-        printf("請輸入起始 終點數字：");
+        printf("請輸入 起始數字 終點數字：");
         scanf("%d %d",&stnum ,&ednum);
-        count = countOne(ednum) - countOne(stnum);
-        printf("%d\n",count);
+        count = countOne(ednum) - countOne(stnum-1);
+        printf("數字 1 在這段區間總共出現 %d 次\n",count);
     } 
     return 0;
 }
