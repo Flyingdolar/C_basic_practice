@@ -13,13 +13,15 @@ int main(){
 
     int xPos[canon+1], yPos[canon+1], level[canon+1], inPut = 0, num = 0, pos = 0, sum = 0;
     printf("請輸入該腹地砲台散佈情況與每行要升級降級的數字：（數值代表砲台等級，0 代表該區域沒有砲台）\n");
-    printf("舉例來說：\n 0 0 3 1\n 0 3 0 -1\n 3 0 0 1\n表示有3台等級3的砲台在3x3的腹地分佈情況，以及每行要升級與降級的數字\n");
+    printf("舉例來說：（表示有3台等級3的砲台在3x3的腹地分佈情況，以及每行要升級與降級的數字）");
+    printf(" 0 0 3 1\n 0 3 0 -1\n 3 0 0 1\n");
+    printf("請輸入：\n");
 
     for (int i = 0; i < row; i++){
         for(int j = 0; j <= col; j++){
             scanf("%d",&inPut);
-            if(j == col){
-                sum /= col;
+            if(j == col && num - pos){
+                sum /= num - pos;
                 sum /= 2;
                 while(pos < num){
                     level[pos] += inPut * sum;
