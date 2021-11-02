@@ -10,6 +10,17 @@ typedef struct{
     int *Coef;
 }Polynomial;
 
+// Function : Compare
+int Compare(int A, int B){
+    if (A = B)
+        return 0;
+    else if (A > B)
+        return 1;
+    else
+        return -1;
+    
+}
+
 // Display : List of Actions
 void ActList(){
     printf("\n");
@@ -74,7 +85,7 @@ Polynomial *newPoly(Polynomial *pX, int *amount){
     *amount = *amount + 1;
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
 
-    // Step 2 -- Given a Name to Polynomial
+    // Step 2 -- Give a Name to Polynomial
     printf(">>  請輸入多項式名稱：");
     newPX[polyNum].name = (char*)malloc(sizeof(char*));
     scanf("%s",newPX[polyNum].name);
@@ -101,6 +112,40 @@ Polynomial *newPoly(Polynomial *pX, int *amount){
 
 // Action 2 : 移除一個多項式(X)
 Polynomial *remPoly(Polynomial *pX, int *amount){
+
+    // Variables
+    char *polyName = (char*)malloc(sizeof(char*));;     // Name of Target Polynomial 
+    int polyNum = -1;           // Serial Number of Target Polynomial
+    int Match;                  // Mark show whether it's Match ?
+
+
+    // Step 1 -- Pick the Target Polynomial
+    while (polyNum < 0){
+        // step 1.1 Read the Name of Polynomial
+        printf(">>請輸入指定之多項式名稱：");
+        scanf("%s",polyName);
+
+        // step 1.2 Find the Specific Polynomial
+        polyNum = *amount;
+        while (polyNum && Match){
+            polyNum--;
+            Match = strcmp(polyName, pX[polyNum].name);
+        }
+        if(Match){          // If not, Scan and Read again
+            printf("(---查無此多項式，請重新輸入---)\n");
+            polyNum = -1;
+            free(polyName);
+        }
+    }
+
+    // Step 2 -- Remove the Target Polynomial
+    (*amount) --;
+    for (int i = polyNum; i < *amount; i++)
+        pX[i] = pX[i+1];
+
+    printf("\n\n");
+    
+    // Step 3 -- Redomain the Structure
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
     return newPX;
 }
@@ -236,7 +281,86 @@ Polynomial *chgTerm(Polynomial *pX, int *amount){
 
 // Action 5 : 選定兩個多項式，使其相加
 Polynomial *addPoly(Polynomial *pX, int *amount){
+
+    // Variables
+    char *polyName = (char*)malloc(sizeof(char*));;     // Name of Target Polynomial 
+    int polyNumA = -1, polyNumB = -1;                   // Serial Number of Target Polynomial
+    int Match;                                          // Mark show whether it's Match ?
+    int remTermA = 0, remTermB = 0;                     // Remain Terms of A and B
+    int resultTerm;                                     // Terms of Result
+
+    // Step 1 -- Redomain the Structure (Expand Memory Space)
+    (*amount)++;
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
+
+    // Step 2A -- Pick the Target Polynomial A
+    while (polyNumA < 0){
+        // step 2A.1 Read the Name of Polynomial
+        printf(">>請輸入指定之多項式名稱：");
+        scanf("%s",polyName);
+
+        // step 2A.2 Find the Specific Polynomial
+        polyNumA = *amount;
+        while (polyNumA && Match){
+            polyNumA--;
+            printf("%d\n",polyNumA);
+            Match = strcmp(polyName, pX[polyNumA].name);
+        }
+        if(Match){          // If not, Scan and Read again
+            printf("(---查無此多項式，請重新輸入---)\n");
+            polyNumA = -1;
+            free(polyName);
+        }
+    }
+    remTermA = newPX[polyNumA].terms;
+
+    // Step 2B -- Pick the Target Polynomial B
+    while (polyNumB < 0){
+        // step 2B.1 Read the Name of Polynomial
+        printf(">>請輸入指定之多項式名稱：");
+        scanf("%s",polyName);
+
+        // step 2B.2 Find the Specific Polynomial
+        polyNumB = *amount;
+        while (polyNumB && Match){
+            polyNumB--;
+            printf("%d\n",polyNumB);
+            Match = strcmp(polyName, pX[polyNumB].name);
+        }
+        if(Match){          // If not, Scan and Read again
+            printf("(---查無此多項式，請重新輸入---)\n");
+            polyNumB = -1;
+            free(polyName);
+        }
+    }
+    remTermB = newPX[polyNumB].terms;
+
+    // Step 3 -- Given a Name to Polynomial
+    // newPX[(*amount)-1].name = (char*)malloc(sizeof(char*));
+    newPX[(*amount)-1].name = "(Add)%d,%d", polyNumA, polyNumB;
+    resultTerm = remTermA + remTermB;
+
+    // Step 4 -- Allocate Memory Space of each Value(Coefficient & Exponential)
+    newPX[(*amount)-1].Coef = (int*)malloc(resultTerm * (sizeof(int*)));
+    newPX[(*amount)-1].Expon = (int*)malloc(resultTerm * (sizeof(int*)));
+
+    // Step 5 -- 
+    while(remTermA <= newPX[polyNumA].terms && remTermB <= newPX[polyNumB].terms){
+        switch (Compare(newPX[polyNumA].Expon, newPX[polyNumB].Expon)){
+            
+            case 1:
+                break;
+
+            case 0:
+                resultTerm--;
+                break;
+            
+            case -1:
+                break;
+        }
+    }
+
+
     return newPX;
 }
 
