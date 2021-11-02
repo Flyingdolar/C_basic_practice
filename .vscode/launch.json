@@ -6,21 +6,13 @@
       "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "stopAtEntry": false,
-      "cwd": "/Users/Thomas/Documents/Github/C_basic_practice",
+      "stopAtEntry": true,
+      "cwd": "/Users/thomas/Documents/110學習檔案/Github/C_basic_practice",
       "environment": [],
-      "program": "/Users/Thomas/Documents/Github/C_basic_practice/build/Debug/outDebug",
+      "program": "/Users/thomas/Documents/110學習檔案/Github/C_basic_practice/build/Debug/outDebug",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "lldb",
-      "miDebuggerPath": "/usr/bin/lldb",
-      "externalConsole": false,
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "externalConsole": true
     }
   ]
 }

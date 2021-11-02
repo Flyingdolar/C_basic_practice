@@ -38,7 +38,6 @@ int main(){
             }
         }
     }
-
     printf("輸出結果：\n");
     pos = 0;
     for(int i = 0; i < row; i++){
