@@ -291,7 +291,6 @@ Polynomial *addPoly(Polynomial *pX, int *amount){
     int resultValu = 0;                                 // Value of Result
 
     // Step 1 -- Redomain the Structure (Expand Memory Space)
-    (*amount)++;
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
 
     // Step 2A -- Pick the Target Polynomial A
@@ -335,6 +334,7 @@ Polynomial *addPoly(Polynomial *pX, int *amount){
     }
 
     // Step 3 -- Given a Name to Polynomial
+    (*amount)++;
     // newPX[(*amount)-1].name = (char*)malloc(sizeof(char*));
     sprintf(newPX[(*amount)-1].name, "(Add) %c %c", polyNumA, polyNumB);
     resultTerm = newPX[polyNumA].terms + newPX[polyNumB].terms;
