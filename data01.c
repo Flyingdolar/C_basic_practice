@@ -179,7 +179,6 @@ Polynomial *chgTerm(Polynomial *pX, int *amount){
         polyNum = *amount;
         while (polyNum && Match){
             polyNum--;
-            printf("%d\n",polyNum);
             Match = strcmp(polyName, pX[polyNum].name);
         }
         if(Match){          // If not, Scan and Read again
@@ -195,11 +194,11 @@ Polynomial *chgTerm(Polynomial *pX, int *amount){
     printf("\n");
 
     // Step 3 -- Find Target Term exist or not
-    for (curExpon = 0; readExpon >= pX[polyNum].Expon[curExpon]; curExpon++){
+    for (curExpon = 0; readExpon <= pX[polyNum].Expon[curExpon]; curExpon++){
         if (readExpon == pX[polyNum].Expon[curExpon]){          // Find the Coefficient in Polynomial
 
             // case A : "Delete"  when Found it!
-            printf("(--於多項式發現此項，進行刪除--)\n");   
+            printf("(--於多項式發現此項，進行刪除--)\n\n");   
 
             pX[polyNum].terms--;        // Delete Space from Terms
 
@@ -216,7 +215,7 @@ Polynomial *chgTerm(Polynomial *pX, int *amount){
         }
     }
     // case B : "Add"  when Not Found!
-    printf("(--多項式未存在此項，進行增加--)\n");
+    printf("(--多項式未存在此項，進行增加--)\n\n");
 
     pX[polyNum].terms++;        // Add Space from Terms
 
@@ -224,13 +223,13 @@ Polynomial *chgTerm(Polynomial *pX, int *amount){
     newPX[polyNum].Expon = (int*)realloc(pX[polyNum].Expon, pX[polyNum].terms * (sizeof(int)));
     newPX[polyNum].Coef = (int*)realloc(pX[polyNum].Coef, pX[polyNum].terms * (sizeof(int)));
 
-    for (int i = newPX[polyNum].terms - 1; i >= curExpon; i--){
+    for (int i = newPX[polyNum].terms - 1; i > curExpon; i--){
         newPX[polyNum].Expon[i] = newPX[polyNum].Expon[i-1];
         newPX[polyNum].Coef[i] = newPX[polyNum].Coef[i-1];
     }
 
-    newPX[polyNum].Expon[curExpon-1] = readExpon;
-    newPX[polyNum].Coef[curExpon-1] = readCoef;
+    newPX[polyNum].Expon[curExpon] = readExpon;
+    newPX[polyNum].Coef[curExpon] = readCoef;
     
     return newPX;
 }
