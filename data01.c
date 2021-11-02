@@ -12,7 +12,7 @@ typedef struct{
 
 // Function : Compare
 int Compare(int A, int B){
-    if (A = B)
+    if (A == B)
         return 0;
     else if (A > B)
         return 1;
@@ -288,6 +288,7 @@ Polynomial *addPoly(Polynomial *pX, int *amount){
     int Match;                                          // Mark show whether it's Match ?
     int remTermA = 0, remTermB = 0;                     // Remain Terms of A and B
     int resultTerm;                                     // Terms of Result
+    int resultValu = 0;                                 // Value of Result
 
     // Step 1 -- Redomain the Structure (Expand Memory Space)
     (*amount)++;
@@ -312,7 +313,6 @@ Polynomial *addPoly(Polynomial *pX, int *amount){
             free(polyName);
         }
     }
-    remTermA = newPX[polyNumA].terms;
 
     // Step 2B -- Pick the Target Polynomial B
     while (polyNumB < 0){
@@ -333,33 +333,71 @@ Polynomial *addPoly(Polynomial *pX, int *amount){
             free(polyName);
         }
     }
-    remTermB = newPX[polyNumB].terms;
 
     // Step 3 -- Given a Name to Polynomial
     // newPX[(*amount)-1].name = (char*)malloc(sizeof(char*));
-    newPX[(*amount)-1].name = "(Add)%d,%d", polyNumA, polyNumB;
-    resultTerm = remTermA + remTermB;
+    sprintf(newPX[(*amount)-1].name, "(Add) %c %c", polyNumA, polyNumB);
+    resultTerm = newPX[polyNumA].terms + newPX[polyNumB].terms;
 
     // Step 4 -- Allocate Memory Space of each Value(Coefficient & Exponential)
     newPX[(*amount)-1].Coef = (int*)malloc(resultTerm * (sizeof(int*)));
     newPX[(*amount)-1].Expon = (int*)malloc(resultTerm * (sizeof(int*)));
 
-    // Step 5 -- 
-    while(remTermA <= newPX[polyNumA].terms && remTermB <= newPX[polyNumB].terms){
-        switch (Compare(newPX[polyNumA].Expon, newPX[polyNumB].Expon)){
+    // Step 5 -- Compare A and B, Insert Value
+    while (remTermA <= newPX[polyNumA].terms && remTermB <= newPX[polyNumB].terms){
+        switch (Compare(newPX[polyNumA].Expon[remTermA], newPX[polyNumB].Expon[remTermB])){
             
             case 1:
+                newPX[(*amount)-1].Coef[resultValu] = newPX[polyNumA].Coef[remTermA];
+                newPX[(*amount)-1].Expon[resultValu] = newPX[polyNumA].Expon[remTermA];
+                remTermA++;
+                resultValu++;
                 break;
 
             case 0:
+                if (newPX[polyNumA].Coef[remTermB] + newPX[polyNumB].Coef[remTermB]){
+                    newPX[(*amount)-1].Coef[resultValu] = newPX[polyNumA].Coef[remTermA] + newPX[polyNumB].Coef[remTermB];
+                    newPX[(*amount)-1].Expon[resultValu] = newPX[polyNumA].Expon[remTermA];
+                    resultValu++;
+                }
+                remTermA++;
+                remTermB++;
                 resultTerm--;
                 break;
             
             case -1:
+                newPX[(*amount)-1].Coef[resultValu] = newPX[polyNumB].Coef[polyNumB];
+                newPX[(*amount)-1].Expon[resultValu] = newPX[polyNumB].Expon[remTermB];
+                remTermB++;
+                resultValu++;
                 break;
         }
     }
 
+    // Step 6A -- Adding Remain Object of A
+    if (remTermA <= newPX[polyNumA].terms){
+        while (remTermA <= newPX[polyNumA].terms){
+            newPX[(*amount)-1].Coef[resultValu] = newPX[polyNumA].Coef[remTermA];
+            newPX[(*amount)-1].Expon[resultValu] = newPX[polyNumA].Expon[remTermA];
+            remTermA++;
+            resultValu++;
+        }
+    }
+
+    // Step 6B -- Adding Remain Object of B
+    if (remTermB <= newPX[polyNumB].terms){
+        while (remTermB <= newPX[polyNumB].terms){
+            newPX[(*amount)-1].Coef[resultValu] = newPX[polyNumB].Coef[remTermB];
+            newPX[(*amount)-1].Expon[resultValu] = newPX[polyNumB].Expon[remTermB];
+            remTermA++;
+            resultValu++;
+        }
+    }
+    
+    
+    // Step 7 -- Allocate new Memory Space of each Value(Coefficient & Exponential)
+    newPX[(*amount)-1].Coef = (int*)malloc(resultTerm * (sizeof(int*)));
+    newPX[(*amount)-1].Expon = (int*)malloc(resultTerm * (sizeof(int*)));
 
     return newPX;
 }
