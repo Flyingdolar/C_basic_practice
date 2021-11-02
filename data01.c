@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Define Polynomial Struct
+// Struct : Polynomial
 typedef struct{
     char *name;
     int terms;
@@ -10,7 +10,7 @@ typedef struct{
     int *Coef;
 }Polynomial;
 
-// Display : Show List of Actions
+// Display : List of Actions
 void ActList(){
     printf("\n");
     printf("   ------- 功  能  選  項  清  單 --------\n");
@@ -29,7 +29,7 @@ void ActList(){
     printf("   --------------------------------------\n\n");
 }
 
-// Display : Show all Polynomial on Screen
+// Display : All Polynomial
 void showPoly(Polynomial *pX, int *amount){
     printf("------------ 多  項  式  列  表 ------------\n\n");
     for(int i = 0; i < *amount; ++i){
@@ -64,30 +64,31 @@ void showPoly(Polynomial *pX, int *amount){
 // Action 1 : 新增一個多項式
 Polynomial *newPoly(Polynomial *pX, int *amount){
 
-    int term;
-    int polyNum = *amount;  // pX[polyNum] = Current Polynomial we are Adding on
+    // Variables
+    int term;               // Terms of new Polynomial
+    int polyNum = *amount;  // Serial Number of new Polynomail
 
     printf("<<< 執 行 1. >>> 新 增 一 個 多 項 式 -----\n\n");
 
-    // Reallocate Memory Space of all Polynomial of X
+    // Step 1 -- Reallocate Memory Space of all Polynomial of X
     *amount = *amount + 1;
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
 
-    // Given a Name to Polynomial
+    // Step 2 -- Given a Name to Polynomial
     printf(">>  請輸入多項式名稱：");
     newPX[polyNum].name = (char*)malloc(sizeof(char*));
     scanf("%s",newPX[polyNum].name);
 
-    // Set terms of Polynomial
+    // Step 3 -- Set terms of Polynomial
     printf(">>  請輸入多項式有多少非零項：");
     scanf("%d",&term);
     newPX[polyNum].terms = term;
 
-    // Allocate Memory Space of each Value(Coefficient & Exponential)
+    // Step 4 -- Allocate Memory Space of each Value(Coefficient & Exponential)
     newPX[polyNum].Coef = (int*)malloc(term * (sizeof(int*)));
     newPX[polyNum].Expon = (int*)malloc(term * (sizeof(int*)));
 
-    // Read Value(Coefficient & Exponential) of Polynomial
+    // Step 5 -- Read Value(Coefficient & Exponential) of Polynomial
     printf("----請由次方數高至低，依次輸入每項多項式（ex. 3 5 --> 3x^5）\n");
     for (int i = 0; i < term; i++){
         printf(">>>  請輸入第%d項：",(i+1));
@@ -98,7 +99,7 @@ Polynomial *newPoly(Polynomial *pX, int *amount){
     return newPX;
 }
 
-// Action 2 : 移除一個多項式
+// Action 2 : 移除一個多項式(X)
 Polynomial *remPoly(Polynomial *pX, int *amount){
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
     return newPX;
@@ -107,20 +108,21 @@ Polynomial *remPoly(Polynomial *pX, int *amount){
 // Action 3 : 選定多項式與指數次方，查看係數值
 int viewTerm(Polynomial *pX, int *amount){
 
-    char *polyName = (char*)malloc(sizeof(char*));;
-    int polyNum = -1;
-    int readTerm;
-    int Match;
+    // Variables
+    char *polyName = (char*)malloc(sizeof(char*));;     // Name of Target Polynomial 
+    int polyNum = -1;           // Serial Number of Target Polynomial
+    int readExpon;              // Exponential of Target Term
+    int Match;                  // Mark show whether it's Match ?
 
-    printf("<<< 執 行 3. >>> 選 定 多 項 式 與 指 數 次 方 ， 查 看 係 數 值 -----\n\n");
+    printf("<<< 執 行 3. >>> 選 定 多 項 式 與 指 數 次 方 ， 查 看 係 數 值\n\n");
     
-    // Pick the Target Polynomial
+    // Step 1 -- Pick the Target Polynomial
     while (polyNum < 0){
-        // Read the Name of Polynomial
+        // step 1.1 Read the Name of Polynomial
         printf(">>請輸入指定之多項式名稱：");
         scanf("%s",polyName);
 
-        // Find the Specific Polynomial
+        // step 1.2 Find the Specific Polynomial
         polyNum = *amount;
         while (polyNum && Match){
             polyNum--;
@@ -128,54 +130,108 @@ int viewTerm(Polynomial *pX, int *amount){
             Match = strcmp(polyName, pX[polyNum].name);
         }
         if(Match){          // If not, Scan and Read again
-            printf("---查無此多項式，請重新輸入---\n");
+            printf("(---查無此多項式，請重新輸入---)\n");
             polyNum = -1;
             free(polyName);
         }
     }
 
-    // Pick the Target Term
+    // Step 2 -- Pick the Target Term (from Exponential)
     printf(">>請輸入指定之項之次方：");
-    scanf("%d",&readTerm);
+    scanf("%d",&readExpon);
     printf("\n");
+
+    // Step 3 -- Find the Target Coefficient from Exponential
+    // case A : Find the Coefficient and Print
     for (int i = 0; i < pX[polyNum].terms; i++){
-        if (readTerm == pX[polyNum].Expon[i]){      // Find the Coefficient in Polynomial
+        if (readExpon == pX[polyNum].Expon[i]){
             printf("該項的係數值為：%d\n\n",pX[polyNum].Coef[i]);
             return 1;
         }
     }
-    printf("該項的係數值為：0\n\n");        // If not, print 0 as Coefficient
+    // case B : If not, print 0 as Coefficient
+    printf("該項的係數值為：0\n\n");        
     return 0;
 }
 
 // Action 4 : 選定多項式，新增/移除非零項
 Polynomial *chgTerm(Polynomial *pX, int *amount){
 
+    // Pointer for Polynomial to Return
     Polynomial *newPX = (Polynomial*)realloc(pX, (*amount) * (sizeof(Polynomial)));
+
+    // Variables
     char *polyName = (char*)malloc(sizeof(char*));;
-    int polyNum = 0;
+    int polyNum = -1;
     int Match;
+    int readExpon, readCoef;
+    int curExpon;
 
-    printf("<<< 執 行 4. >>> 選 定 多 項 式 ， 新 增 / 移 除 非 零 項 -----\n\n");
+    printf("<<< 執 行 4. >>> 選 定 多 項 式 ， 新 增 / 移 除 非 零 項\n\n");
 
-    // Pick the Target Polynomial
-    while (!polyNum){
-        // Read the Name of Polynomial
+    // Step 1 -- Pick the Target Polynomial
+    while (polyNum < 0){
+        // step 1.1 Read the Name of Polynomial
         printf(">>請輸入指定之多項式名稱：");
         scanf("%s",polyName);
 
-        // Find the Specific Polynomial
+        // step 1.2 Find the Specific Polynomial
         polyNum = *amount;
-        while (polyNum-- || Match){
-            if(sizeof(polyName) == sizeof(pX[polyNum].name))
-                Match = strcmp(polyName, pX[polyNum].name);
+        while (polyNum && Match){
+            polyNum--;
+            printf("%d\n",polyNum);
+            Match = strcmp(polyName, pX[polyNum].name);
         }
         if(Match){          // If not, Scan and Read again
-            printf("---查無此多項式，請重新輸入---\n");
+            printf("(---查無此多項式，請重新輸入---)\n");
+            polyNum = -1;
             free(polyName);
         }
     }
 
+    // Step 2 -- Pick the Target Term
+    printf(">>請輸入要新增/移除之指定項次（ex. 3 5 --> 3x^5）：");
+    scanf("%d %d", &readCoef, &readExpon);
+    printf("\n");
+
+    // Step 3 -- Find Target Term exist or not
+    for (curExpon = 0; readExpon >= pX[polyNum].Expon[curExpon]; curExpon++){
+        if (readExpon == pX[polyNum].Expon[curExpon]){          // Find the Coefficient in Polynomial
+
+            // case A : "Delete"  when Found it!
+            printf("(--於多項式發現此項，進行刪除--)\n");   
+
+            pX[polyNum].terms--;        // Delete Space from Terms
+
+            for (int j = curExpon; j < pX[polyNum].terms; j++){
+                pX[polyNum].Expon[j] = pX[polyNum].Expon[j+1];
+                pX[polyNum].Coef[j] = pX[polyNum].Coef[j+1];
+            }
+
+            // Redomain the Structure
+            newPX[polyNum].Expon = (int*)realloc(pX[polyNum].Expon, pX[polyNum].terms * (sizeof(int)));
+            newPX[polyNum].Coef = (int*)realloc(pX[polyNum].Coef, pX[polyNum].terms * (sizeof(int)));
+            
+            return newPX;   // End Action, Return
+        }
+    }
+    // case B : "Add"  when Not Found!
+    printf("(--多項式未存在此項，進行增加--)\n");
+
+    pX[polyNum].terms++;        // Add Space from Terms
+
+    // Redomain the Structure
+    newPX[polyNum].Expon = (int*)realloc(pX[polyNum].Expon, pX[polyNum].terms * (sizeof(int)));
+    newPX[polyNum].Coef = (int*)realloc(pX[polyNum].Coef, pX[polyNum].terms * (sizeof(int)));
+
+    for (int i = newPX[polyNum].terms - 1; i >= curExpon; i--){
+        newPX[polyNum].Expon[i] = newPX[polyNum].Expon[i-1];
+        newPX[polyNum].Coef[i] = newPX[polyNum].Coef[i-1];
+    }
+
+    newPX[polyNum].Expon[curExpon-1] = readExpon;
+    newPX[polyNum].Coef[curExpon-1] = readCoef;
+    
     return newPX;
 }
 
