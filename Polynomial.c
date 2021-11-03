@@ -2,17 +2,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Struct : Polynomial ===================================================================================
+// >>  Structure Define
 typedef struct{
     char *Name;         // Name of Polynomial
     int terms;          // Terms of Elements
     float *Coef;        // Coefficient of Element
     float *Expon;       // Exponential of Element
 }poly;
-//========================================================================================================
 
-// Print : Introduction ==================================================================================
-void showIntro(){
+// =======================================================================================================
+
+// >>  1  Absolute Positive
+float absPos(float num){
+    if(num < 0)
+        num = 0 - num;
+    return num;
+}
+
+// >>  2  Compare
+int compare(float a, float b){
+    if(a > b)
+        return 1;
+    else if(a < b)
+        return -1;
+    return 0;
+}
+
+// =======================================================================================================
+
+// >>  1  Introduction
+void showIntro(void){
     printf("\n");
     printf("   ------- 功  能  選  項  清  單 --------\n");
     printf("  |                                       |\n");
@@ -29,13 +48,13 @@ void showIntro(){
     printf("  |                                       |\n");
     printf("   --------------------------------------\n\n");
 }
-//========================================================================================================
 
-// Print : Polynomial ==================================================================================
+// >>  2  Polynomial Display
 void showPoly(poly *data, int stdPt, int endPt){
 
     // Variables
     float *expon, *coef;
+    float printNum;
 
     // Print the Polynomials
     for (int polyNum = stdPt; polyNum < endPt; polyNum++){
@@ -58,8 +77,10 @@ void showPoly(poly *data, int stdPt, int endPt){
                 printf(" -");
             
             // Coefficient
-            if(coef[termNum] != 1 || !expon[termNum])
-                printf(" %f ", absPos(coef[termNum]));
+            if(coef[termNum] != 1 || !expon[termNum]){
+                printNum = absPos(coef[termNum]);
+                printf(" %f ", printNum);
+            }
 
             // Exponential
             if(expon[termNum]){
@@ -71,16 +92,36 @@ void showPoly(poly *data, int stdPt, int endPt){
         } 
     } 
 }
-//========================================================================================================
 
-// Function : Polynomial Resize ==========================================================================
+
+// =======================================================================================================
+
+// >>  1  Polynomial Search
+int pSearch(poly *data, int count, char *typeName){
+
+    int num;
+    int Match = 1;
+
+    // 1. -- Find the Polynomial
+    while(count-- & Match){
+        num = count - 1;
+        Match = strcmp(data[num].Name, typeName);
+    }
+
+    // 2. -- Print the Polynomial Serial Number out
+    if(Match)
+        num = -1;
+    
+    return num;
+}
+
+// >>  2  Polynomial Resize
 poly *pResize(poly *data, int count){
     poly *newData = (poly*)realloc(data, count * (sizeof(poly)));
     return newData;
 }
-//========================================================================================================
 
-// Function : Polynomial Add =============================================================================
+// >>  3  Polynomial Add
 poly *pAdd(poly *data, int *count, poly newP){
     
     // 1. -- Add 1 Memory Space for New Polynomial
@@ -92,25 +133,6 @@ poly *pAdd(poly *data, int *count, poly newP){
     (*count)++; 
     return data;
 }
-//========================================================================================================
-
-// Function : Absolute Positive ==========================================================================
-float absPos(float num){
-    if(num < 0)
-        num = 0 - num;
-    return num;
-}
-//========================================================================================================
-
-// Function : Compare ====================================================================================
-int compare(float a, float b){
-    if(a > b)
-        return 1;
-    else if(a < b)
-        return -1;
-    return 0;
-}
-//========================================================================================================
 
 // Main : IO and Interface ===============================================================================
 int main(int argc, char const *argv[]){
@@ -142,7 +164,7 @@ int main(int argc, char const *argv[]){
                 printf(">>  請輸入多項式名稱：");
                 scanf("%s", inPoly.Name);
                 printf(">>  請輸入多項式有多少非零項：");
-                scanf("%d", inPoly.terms);
+                scanf("%d", &(inPoly.terms));
 
                 printf("            ------請輸入多項式內容------");
                 printf("(--請由次方數高至低，依次輸入每項多項式（ex. 3 5 --> 3x^5）--)");
