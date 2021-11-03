@@ -138,10 +138,29 @@ int main(int argc, char const *argv[]){
 
                 printf("<<< 執 行 1. >>> 新 增 一 個 多 項 式 -----\n\n");
                 
+                // A -- Set the Name and Terms
                 printf(">>  請輸入多項式名稱：");
                 scanf("%s", inPoly.Name);
+                printf(">>  請輸入多項式有多少非零項：");
+                scanf("%d", inPoly.terms);
 
-                scanf("%d");
+                printf("            ------請輸入多項式內容------");
+                printf("(--請由次方數高至低，依次輸入每項多項式（ex. 3 5 --> 3x^5）--)");
+                
+                // B -- Set each element Property
+                inPoly.Coef = (float*)malloc(inPoly.terms * sizeof(float));
+                inPoly.Expon = (float*)malloc(inPoly.terms * sizeof(float));
+                for (int num = 0; num < inPoly.terms; num++){
+                    printf(">>>  請輸入第%d項：",(num + 1));
+                    scanf("%f %f", &inPoly.Coef[num], &inPoly.Expon[num]);
+                }
+
+                // C -- Add Polynomial to Database
+                Database = pAdd(Database,&polyAmount,inPoly);
+
+                free(inPoly.Coef);
+                free(inPoly.Expon);
+                printf("\n");
                 break;
             case 2: //--------------------------------------- 移除一個多項式
                 
@@ -171,6 +190,7 @@ int main(int argc, char const *argv[]){
         showPoly(Database, 0, polyAmount);                  // Show Polynomial (All)
     }
 
+    free(Database);
     return 0;
 }
 //========================================================================================================
