@@ -114,7 +114,7 @@ Polynomial *newPoly(Polynomial *pX, int *amount){
 Polynomial *remPoly(Polynomial *pX, int *amount){
 
     // Variables
-    char *polyName = (char*)malloc(sizeof(char*));;     // Name of Target Polynomial 
+    char *polyName = (char*)malloc(sizeof(char*));     // Name of Target Polynomial 
     int polyNum = -1;           // Serial Number of Target Polynomial
     int Match;                  // Mark show whether it's Match ?
 
