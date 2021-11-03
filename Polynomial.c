@@ -80,6 +80,20 @@ poly *pResize(poly *data, int count){
 }
 //========================================================================================================
 
+// Function : Polynomial Add =============================================================================
+poly *pAdd(poly *data, int *count, poly newP){
+    
+    // 1. -- Add 1 Memory Space for New Polynomial
+    data = pResize(data, (*count)+1);
+
+    // 2. -- Place New Polynomial in Data Space
+    data[*count] = newP;
+    
+    (*count)++; 
+    return data;
+}
+//========================================================================================================
+
 // Function : Absolute Positive ==========================================================================
 float absPos(float num){
     if(num < 0)
@@ -103,6 +117,7 @@ int main(int argc, char const *argv[]){
 
     // Variables
     poly *Database = (poly*)malloc(sizeof(poly));       // Database : Collection of all Polynomial
+    poly inPoly;                                     // Input Polynomial : Storage Insert Polynomial
     int polyAmount = 0;                                 // Polynomial Amount : Total Amount of Polynomial
     int userChoice = -1;                                // User Choice : Record User's Choice
 
@@ -114,19 +129,46 @@ int main(int argc, char const *argv[]){
     while(userChoice){
 
         // Scan User's Input
+        printf("> 請輸入要操作的功能代碼（0~9）：");
         scanf("%d", &userChoice);
+        printf("\n");
 
         switch (userChoice){
-            case 1: //---------------------------------------
+            case 1: //-----------------------------------------------------------------------------------
+
+                printf("<<< 執 行 1. >>> 新 增 一 個 多 項 式 -----\n\n");
+                
+                printf(">>  請輸入多項式名稱：");
+                scanf("%s", inPoly.Name);
+
+                scanf("%d");
+                break;
+            case 2: //--------------------------------------- 移除一個多項式
                 
                 break;
-            case 2: //---------------------------------------
-                
-                break;
-            case 3: //----------------------------------------
+            case 3: //--------------------------------------- 選定多項式與指數次方，查看係數值
 
                 break;
+            case 4: //--------------------------------------- 選定多項式，新增/移除非零項
+
+                break;
+            case 5: //--------------------------------------- 選定兩個多項式，使其相加
+
+                break;
+            case 6: //--------------------------------------- 選定兩個多項式，使其相減
+
+                break;
+            case 7: //--------------------------------------- 選定兩個多項式，使其相乘
+
+                break;
+            case 8: //--------------------------------------- 選定兩個多項式，使其相除
+
+                break;
+            case 9: //--------------------------------------- 開啟功能選單
+                showIntro();
+                break;
         }
+        showPoly(Database, 0, polyAmount);                  // Show Polynomial (All)
     }
 
     return 0;
