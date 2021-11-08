@@ -3,7 +3,7 @@
 #include <string.h>
 
 // >>  Structure Define
-typedef struct{
+typedef struct{ 
     char *Name;         // Name of Polynomial
     int terms;          // Terms of Elements
     float *Coef;        // Coefficient of Element
@@ -23,15 +23,6 @@ float absPos(float num){
     if(num < 0)
         num = rvs(num);
     return num;
-}
-
-// >>  3  Compare
-int compare(float a, float b){
-    if(a > b)
-        return 1;
-    else if(a < b)
-        return -1;
-    return 0;
 }
 
 // =======================================================================================================
@@ -56,16 +47,20 @@ void showIntro(void){
 }
 
 // >>  2  Polynomial Display
-void showPoly(poly *data, int stdPt, int endPt){
+char *showPoly(poly *data, int stdPt, int num){
 
     // Variables
     float *expon, *coef;
+    char *stg = (char*)malloc(1000 * sizeof(char));
+    char *str = (char*)malloc(50 * sizeof(char));
+    // memset(stg, 0, 1000);
 
     // Print the Polynomials
-    for (int polyNum = stdPt; polyNum < endPt; polyNum++){
+    for (int polyNum = stdPt; polyNum < (stdPt + num); polyNum++){
 
         // Setting Polynomial's Property
-        printf("%d : %s = ", polyNum, data[polyNum].Name);
+        sprintf(str, "%d : %s = ", polyNum, data[polyNum].Name);
+        strcat(stg, str);
         coef = data[polyNum].Coef;
         expon = data[polyNum].Expon;
 
@@ -74,26 +69,38 @@ void showPoly(poly *data, int stdPt, int endPt){
 
             // Notation +
             if(termNum)
-                if(coef[termNum] > 0)
-                    printf(" + ");
+                if(coef[termNum] > 0){
+                    sprintf(str, " + ");
+                    strcat(stg, str);
+                }
 
             // Notation -
-            if (coef[termNum] < 0)
-                printf(" - ");
+            if (coef[termNum] < 0){
+                sprintf(str, " - ");
+                strcat(stg, str);
+            }   
             
             // Coefficient
-            if(coef[termNum] != 1 || !expon[termNum])
-                printf("%g", absPos(coef[termNum]));
+            if(coef[termNum] != 1 || !expon[termNum]){
+                sprintf(str, "%g", absPos(coef[termNum]));
+                strcat(stg, str);
+            }
+                
 
             // Exponential
             if(expon[termNum]){
-                printf("x");
-                if(expon[termNum] > 1)
-                    printf("^%g", expon[termNum]);
+                sprintf(str, "x");
+                strcat(stg, str);
+                if(expon[termNum] > 1){
+                    sprintf(str, "^%g", expon[termNum]);
+                    strcat(stg, str);
+                }
             }
         } 
-        printf("\n");
+        sprintf(str, "\n");
+        strcat(stg, str);
     }
+    return stg;
 }
 
 // =======================================================================================================
@@ -119,7 +126,7 @@ poly *eAdd(poly *data, int pick, float coef, float expon){
     }
     
     // (case B) If Not, Add Term
-    num = 1 - num;
+    num = (-1) - num;
     poly *newData = data;
     newData[pick].terms ++;
     newData[pick].Coef = (float*)realloc(data[pick].Coef, newData[pick].terms * sizeof(float));
@@ -151,6 +158,30 @@ poly *eRemove(poly *data, int pick, float expon){
     newData[pick].Expon = (float*)realloc(data[pick].Expon, newData[pick].terms * sizeof(float));
 
     return newData;
+}
+
+// >>  4  Element Resize
+float *eResize(float *fArray, int count){
+    float *newArray = (float*)realloc(fArray, count * sizeof(float));
+    return newArray;
+}
+
+// >>  5  Element Multiply
+poly eMulti(poly fArray, float coef, float expon){
+
+    poly newArrary;
+
+    newArrary.Name = fArray.Name;
+    newArrary.terms = fArray.terms;
+    newArrary.Coef = (float*)malloc(fArray.terms * sizeof(float));
+    newArrary.Expon = (float*)malloc(fArray.terms * sizeof(float));
+
+    for (int num = 0; num < newArrary.terms; num++){
+        newArrary.Coef[num] = fArray.Coef[num] * coef;
+        newArrary.Expon[num] = fArray.Expon[num] + expon;
+    }
+
+    return newArrary;
 }
 
 // =======================================================================================================
@@ -202,33 +233,156 @@ int pFind(poly *data, int count, char *tarName){
     return -1;
 }
 
+// >>  5  Polynomial Combine
+poly pCom(poly *data, int a, int b, int mode){
+
+    poly pA, pB, pRslt;
+    int numA = 0, numB = 0, numR = 0;
+
+    // eResize(pA.Coef, data[a].terms);
+    // eResize(pA.Expon, data[a].terms);
+    // eResize(pB.Coef, data[b].terms);
+    // eResize(pB.Expon, data[b].terms);
+
+    pA = data[a];
+    pB = data[b];
+
+    // (A) Set Result Polynomial and Combine Mode
+    pRslt.Name = (char*)malloc(sizeof(char));
+    if(mode){
+        // case A -- Positive Mode
+        sprintf(pRslt.Name,"(ADD)%s_%s", pA.Name, pB.Name);
+    }else{
+        // case B -- Negative Mode
+        sprintf(pRslt.Name,"(SUB)%s_%s", pA.Name, pB.Name);
+        for (int num = 0; num < pB.terms; num++){
+            pB.Coef[num] = rvs(pB.Coef[num]);
+        }
+    }
+    
+    pRslt.terms = pA.terms + pB.terms;
+    pRslt.Coef = (float*)malloc(pRslt.terms * sizeof(float));
+    pRslt.Expon = (float*)malloc(pRslt.terms * sizeof(float));
+
+    // (B) Compare & Sequential Input
+    while(numA < pA.terms && numB < pB.terms){
+        if (pA.Expon[numA] == pB.Expon[numB]){
+            pRslt.Coef[numR] = pA.Coef[numA] + pB.Coef[numB];
+            pRslt.Expon[numR] = pA.Expon[numA];
+            numA++, numB++;
+        }else if (pA.Expon[numA] > pB.Expon[numB]){
+            pRslt.Coef[numR] = pA.Coef[numA];
+            pRslt.Expon[numR] = pA.Expon[numA];
+            numA++;
+        }else{
+            pRslt.Coef[numR] = pB.Coef[numB];
+            pRslt.Expon[numR] = pB.Expon[numB];
+            numB++;
+        }
+        numR++;
+    }
+    
+    // (C) Input Remain
+    while(numA < pA.terms){
+        pRslt.Coef[numR] = pA.Coef[numA];
+        pRslt.Expon[numR] = pA.Expon[numA];
+        numA++, numR++;
+    }
+    while(numB < pB.terms){
+        pRslt.Coef[numR] = pB.Coef[numB];
+        pRslt.Expon[numR] = pB.Expon[numB];
+        numB++, numR++;
+    }
+
+    pRslt.terms = numR;
+    pRslt.Coef = eResize(pRslt.Coef, numR);
+    pRslt.Expon = eResize(pRslt.Expon, numR);
+
+    return pRslt;
+}
+
+// >>  6  Polynomial Multiply
+poly pMulti(poly *data, int a, int b){
+
+    // (1) -- Polynomial Setting
+    poly *stor = (poly*)malloc(2 * sizeof(poly));
+
+    stor[0].terms = data[a].terms;
+    stor[0].Coef = (float*)malloc(stor[0].terms * sizeof(float));
+    stor[0].Expon = (float*)malloc(stor[0].terms * sizeof(float));
+
+    stor[1].terms = 2 * data[a].terms;
+    stor[1].Coef = (float*)malloc(stor[1].terms * sizeof(float));
+    stor[1].Expon = (float*)malloc(stor[1].terms * sizeof(float));
+
+    // (2) -- Multiply by Terms
+    for (int num = 0; num < data[b].terms; num++){
+        if(!num){
+            stor[1] = eMulti(data[a], data[b].Coef[num], data[b].Expon[num]);
+        }else{
+            stor[0] = eMulti(data[a], data[b].Coef[num], data[b].Expon[num]);
+            stor[1] = pCom(stor, 0, 1, 1);
+        }
+    }
+    stor[1].Name = (char*)malloc(100 * sizeof(char));
+    sprintf(stor[1].Name, "(Multi)%s_%s", data[a].Name, data[b].Name);
+    return stor[1];
+}
+
+// >>  7  Polynomial Subtract
+poly *pSubtr(poly *data, int a, int b){
+    poly *stor = (poly*)malloc(3 * sizeof(poly));
+    stor[1] = data[a];
+
+    int num = 0;
+    while(stor[1].Expon[0] >= data[b].Expon[0] && num < 100){
+        stor[0].Coef = (float*)malloc((num+1) * sizeof(float));
+        stor[0].Expon = (float*)malloc((num+1) * sizeof(float));
+
+        stor[0].Coef[num] = stor[1].Coef[0] / data[b].Coef[0];
+        stor[0].Expon[num] = stor[1].Expon[0] - data[b].Expon[0];
+
+        stor[2] = eMulti(data[b], stor[0].Coef[num], stor[0].Expon[num]);
+        stor[1] = pCom(stor, 1, 2, 0);
+        num++;
+    }
+
+    stor[0].Name = (char*)malloc(sizeof(char));
+    sprintf(stor[1].Name, "(QUO)%s_%s", data[a].Name, data[b].Name);
+    stor[1].Name = (char*)malloc(sizeof(char));
+    sprintf(stor[1].Name, "(REM)%s_%s", data[a].Name, data[b].Name);
+
+    return stor;
+}
+
 // Main : IO and Interface ===============================================================================
 int main(int argc, char const *argv[]){
 
     // Variables
     poly *Database = (poly*)malloc(sizeof(poly));       // Database : Collection of all Polynomial
     poly inPoly;                                        // Input Polynomial : Storage Insert Polynomial
+    poly *inPoly2 = (poly*)malloc(2 * sizeof(poly));
     char *inNam = (char*)malloc(sizeof(char));          // Input Name
     float inCf, inExp;                                  // Input Coefficient & Exponential
     int polyAmount = 0;                                 // Polynomial Amount : Total Amount of Polynomial
-    int seNumP1, seNumP2, seNumE1, seNumE2;             // Serial Number : Tagged the Specific Value or Polynomial
+    int seNumP1, seNumP2, seNumE1, seNumE2;             // Serial Number : Tagged the Specific Term or Polynomial
     int userChoice = -1;                                // User Choice : Record User's Choice
-    char Message[100];        // Input Name
+    char Message[1000];                                 // Message
 
     // 1. -- First Entry
     showIntro();            // Show Introduction
-    memset(Message, 0, 100);
+    memset(Message, 0, 1000);
 
     // 2. -- Loop
     while(userChoice){
 
         // Show Polynomial (All)
-        printf("------------ 多  項  式  列  表 ------------\n\n");
-        showPoly(Database, 0, polyAmount);                              
+        printf("------------ 多  項  式  列  表 ------------\n");
+        printf("%s",showPoly(Database, 0, polyAmount));                              
         printf("--------------------------------------------\n\n");
 
         printf("%s\n\n",Message);
-        memset(Message, 0, 100);
+        memset(Message, 0, 1000);
 
         // Scan User's Input
         printf("> 請輸入要操作的功能代碼（0~9）：");
@@ -323,19 +477,111 @@ int main(int argc, char const *argv[]){
 
             // C -- Add or Remove
             seNumE1 = eSearch(Database[seNumP1], inExp);
-            if (eSearch >= 0){
+            if (seNumE1 >= 0){
                 // case A : Remove if Existed
                 Database = eRemove(Database, seNumP1, inExp);
-                sprintf(Message, "   (--- 已移除指定項次：%fx^%f ---)", inCf, inExp);
+                sprintf(Message, "   (--- 已移除指定項次：%gx^%g ---)", inCf, inExp);
             }else{
                 // case B : Add if Not Existed
                 Database = eAdd(Database, seNumP1, inCf, inExp);
-                sprintf(Message, "   (--- 已新增指定項次：%fx^%f ---)", inCf, inExp);
+                sprintf(Message, "   (--- 已新增指定項次：%gx^%g ---)", inCf, inExp);
             }  
         }
         
+        if (userChoice == 5){
+            printf("<<< 執 行 5. >>> 多 項 式 加 法\n\n");
+
+            // A -- Find both 2 Polynomial
+            printf(">>請輸入第一個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP1 = pFind(Database, polyAmount, inNam);
+            printf(">>請輸入第二個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP2 = pFind(Database, polyAmount, inNam);
+
+            // B -- Execute Polynomial Combination
+            inPoly.Coef = (float*)malloc(sizeof(float));
+            inPoly.Expon = (float*)malloc(sizeof(float));
+            inPoly = pCom(Database, seNumP1, seNumP2, 1);
+
+            // C -- Add to Database & Display
+            Database = pAdd(Database, &polyAmount, inPoly);
+            sprintf(Message, "   (--- 得到結果如下---)\n %s", showPoly(Database, polyAmount-1, 1));
+            printf("\n");
+        }
+
+        if (userChoice == 6){    
+            printf("<<< 執 行 6. >>> 多 項 式 減 法\n\n");
+
+            // A -- Find both 2 Polynomial
+            printf(">>請輸入第一個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP1 = pFind(Database, polyAmount, inNam);
+            printf(">>請輸入第二個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP2 = pFind(Database, polyAmount, inNam);
+
+            // B -- Execute Polynomial Combination
+            inPoly.Coef = (float*)malloc(sizeof(float));
+            inPoly.Expon = (float*)malloc(sizeof(float));
+            inPoly = pCom(Database, seNumP1, seNumP2, 0);            
+
+            // C -- Add to Database & Display
+            Database = pAdd(Database, &polyAmount, inPoly);
+            sprintf(Message, "   (--- 得到結果如下---)\n %s", showPoly(Database, polyAmount-1, 1));
+            printf("\n");
+            
     }
 
+        if (userChoice == 7){
+            printf("<<< 執 行 7. >>> 多 項 式 乘 法\n\n");
+
+            // A -- Find both 2 Polynomial
+            printf(">>請輸入第一個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP1 = pFind(Database, polyAmount, inNam);
+            printf(">>請輸入第二個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP2 = pFind(Database, polyAmount, inNam);
+
+            // B -- Execute Polynomial Multiply
+            inPoly.Coef = (float*)malloc(sizeof(float));
+            inPoly.Expon = (float*)malloc(sizeof(float));
+            inPoly = pMulti(Database, seNumP1, seNumP2);
+            
+            // C -- Add to Database & Display
+            Database = pAdd(Database, &polyAmount, inPoly);
+            sprintf(Message, "   (--- 得到結果如下---)\n %s", showPoly(Database, polyAmount-1, 1));
+            printf("\n");
+        }
+
+        if (userChoice == 8){
+            printf("<<< 執 行 8. >>> 多 項 式 除 法\n\n");
+
+            // A -- Find both 2 Polynomial
+            printf(">>請輸入第一個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP1 = pFind(Database, polyAmount, inNam);
+            printf(">>請輸入第二個多項式名稱：");
+            scanf("%s",inNam);
+            seNumP2 = pFind(Database, polyAmount, inNam);
+
+            // B -- Execute Polynomial Subtraction
+            inPoly2 = pSubtr(Database, seNumP1, seNumP2);
+
+            // C -- Add to Database & Display
+            Database = pAdd(Database, &polyAmount, inPoly2[0]);
+            Database = pAdd(Database, &polyAmount, inPoly2[1]);
+            sprintf(Message, "   (--- 得到結果如下---)\n %s", showPoly(Database, polyAmount-2, 2));
+            printf("\n");
+        }
+
+        if (userChoice == 9){
+            printf("<<< 執 行 9. >>> 顯 示 說 明\n\n");
+            showIntro();
+        }
+
+    }
     free(Database);
     return 0;
 }
