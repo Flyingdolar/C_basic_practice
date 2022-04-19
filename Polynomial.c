@@ -2,8 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedf int Mark Thomas;
+
+
+struct _node{
+    int num;
+    struct _node* next;
+};
+
+typedef struct _node node;
+
+typedef struct node{
+    int num;
+    struct node* next;
+}node;
+
+
 // >>  Structure Define
-typedef struct{ 
+typedef struct poly{ 
     char *Name;         // Name of Polynomial
     int terms;          // Terms of Elements
     float *Coef;        // Coefficient of Element
